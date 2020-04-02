@@ -1,7 +1,7 @@
 const config = require('config')
 const withPage = require('./lib/withPage')
 const log = require('./lib/log')
-const twilio = require('./twilio')
+const oncePerDay = require('./lib/oncePerDay')
 
 module.exports = withPage(checkForSlots)
 
@@ -23,19 +23,25 @@ async function checkForSlots (page, tescoConfig) {
   })
 
   log.info('Going to orders page')
-  await page.click('#utility-header-orders-link')
-  await page.waitFor('.my-orders--orders-list', { visible: true })
-  const pendingOrders = await count(
-    '.orders-list[data-auto="pending-order-list"] li'
-  )
+  await page.goto('https://www.tesco.com/groceries/en-GB/orders')
+  if (await exists('.my-orders.no-results')) {
+    log.info('No pending orders')
+  } else {
+    const pendingOrders = await count(
+      '.orders-list[data-auto="pending-order-list"] li'
+    )
 
-  log.info(`Pending orders: ${pendingOrders}`)
-  if (pendingOrders >= 2) {
-    log.warn("Tesco won't let you book more than 2 orders in advance, aborting")
-    return
+    log.info(`Pending orders: ${pendingOrders}`)
+    if (pendingOrders >= 2) {
+      log.warn(
+        "Tesco won't let you book more than 2 orders in advance, aborting"
+      )
+      return
+    }
   }
 
   let summary = []
+  let hasSlots = false
 
   for (const type of ['delivery', 'collection']) {
     log.info(`Checking for ${type} slots`)
@@ -61,19 +67,22 @@ async function checkForSlots (page, tescoConfig) {
     }
 
     if (availableRanges.length) {
+      hasSlots = true
       summary.push(
         `There are slots available for ${type} on ${availableRanges.join(
           ' and '
-        )}.`
+        )}`
       )
     } else {
-      summary.push(`There are no slots available on any dates for ${type} :(`)
+      summary.push(`There are no slots available on any dates for ${type}`)
     }
   }
 
-  log.info(summary.join(' '))
-  for (const to of tescoConfig.phoneNumbers) {
-    await twilio.send(to, summary.join(' '))
+  log.info(summary.join('. '))
+  if (hasSlots || config.alwaysSendTexts) {
+    for (const to of tescoConfig.phoneNumbers) {
+      await oncePerDay(to, summary.join('. '))
+    }
   }
 
   function count (sel) {

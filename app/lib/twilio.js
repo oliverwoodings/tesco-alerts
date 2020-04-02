@@ -1,6 +1,6 @@
 const createTwilio = require('twilio')
 const config = require('config')
-const log = require('./lib/log')('twilio')
+const log = require('./log')('twilio')
 
 const twilio = createTwilio(config.twilio.accountSid, config.twilio.authToken)
 

@@ -8,7 +8,7 @@ puppeteer:
   options:
     headless: true
   closeOnError: true
-  timeout: 30000
+  timeout: 60000
 
 twilio:
   accountSid: AC479050186f2a17f5874a17cdd57f2f03
@@ -19,6 +19,8 @@ sentry:
   enabled: false
   dsn: foo
 
-schedule: 0 0 * * *
+schedule: '*/10 * * * *'
 
 runOnStart: false
+
+alwaysSendTexts: false
