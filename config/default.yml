@@ -19,7 +19,7 @@ sentry:
   enabled: false
   dsn: foo
 
-schedule: '*/10 * * * *'
+schedule: '*/30 * * * *'
 
 runOnStart: false
 
