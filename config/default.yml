@@ -8,7 +8,7 @@ puppeteer:
   options:
     headless: true
   closeOnError: true
-  timeout: 60000
+  timeout: 120000
 
 twilio:
   accountSid: AC479050186f2a17f5874a17cdd57f2f03
