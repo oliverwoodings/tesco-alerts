@@ -19,8 +19,8 @@
     "format": "prettier-standard '**/*.js'",
     "deploy": "pm2 deploy production",
     "start": "node .",
-    "logs": "pm2 deploy production exec \"pm2 logs banking\"",
-    "restart": "pm2 deploy production exec \"pm2 restart banking\""
+    "logs": "pm2 deploy production exec \"pm2 logs tesco-alerts\"",
+    "restart": "pm2 deploy production exec \"pm2 restart tesco-alerts\""
   },
   "author": "Oliver Woodings",
   "license": "MIT",

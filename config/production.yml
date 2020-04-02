@@ -1,2 +1,7 @@
 sentry:
   enabled: true
+
+puppeteer:
+  options:
+    args:
+      - '--no-sandbox'
