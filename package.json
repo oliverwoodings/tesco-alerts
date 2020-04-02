@@ -1,0 +1,39 @@
+{
+  "name": "tesco-alerts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/index.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier-standard",
+      "git add"
+    ]
+  },
+  "scripts": {
+    "format": "prettier-standard '**/*.js'"
+  },
+  "author": "Oliver Woodings",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^1.3.1",
+    "lint-staged": "^10.1.1",
+    "nodemon": "^2.0.2",
+    "prettier-standard": "^16.2.1"
+  },
+  "dependencies": {
+    "@sentry/node": "^5.15.4",
+    "config": "^3.3.1",
+    "driftwood": "^1.5.5",
+    "fs-extra": "^9.0.0",
+    "js-yaml": "^3.13.1",
+    "p-timeout": "^3.2.0",
+    "puppeteer": "^2.1.1",
+    "twilio": "^3.42.0"
+  }
+}
