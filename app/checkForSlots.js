@@ -62,6 +62,9 @@ async function checkForSlots (page, tescoConfig) {
 
       const noneAvailable = await exists('.slot-list--none-available')
       if (!noneAvailable) {
+        await page.simpleScreenshot(
+          `${tescoConfig.username}-${type}-${tabText}`
+        )
         availableRanges.push(tabText)
       }
     }
