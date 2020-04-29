@@ -1,7 +1,7 @@
 const config = require('config')
 const withPage = require('./lib/withPage')
 const log = require('./lib/log')
-const oncePerDay = require('./lib/oncePerDay')
+const oncePerHour = require('./lib/oncePerHour')
 
 module.exports = withPage(checkForSlots)
 
@@ -84,7 +84,7 @@ async function checkForSlots (page, tescoConfig) {
   log.info(summary.join('. '))
   if (hasSlots || config.alwaysSendTexts) {
     for (const to of tescoConfig.phoneNumbers) {
-      await oncePerDay(to, summary.join('. '))
+      await oncePerHour(to, summary.join('. '))
     }
   }
 

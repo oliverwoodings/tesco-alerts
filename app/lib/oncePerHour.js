@@ -2,12 +2,12 @@ const cache = require('./cache')
 const twilio = require('./twilio')
 const log = require('./log')('once-per-day')
 
-const ONE_DAY = 1000 * 60 * 60 * 24
+const ONE_HOUR = 1000 * 60 * 60
 
-module.exports = async function oncePerDay (to, body) {
+module.exports = async function oncePerHour (to, body) {
   const key = `last-sent:${to}`
   const lastSent = await cache.get(key)
-  if (!lastSent || Date.now() - lastSent >= ONE_DAY) {
+  if (!lastSent || Date.now() - lastSent >= ONE_HOUR) {
     await twilio.send(to, body)
     await cache.set(key, Date.now())
   } else {
