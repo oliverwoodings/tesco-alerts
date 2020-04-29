@@ -86,6 +86,8 @@ async function checkForSlots (page, tescoConfig) {
     for (const to of tescoConfig.phoneNumbers) {
       await oncePerHour(to, summary.join('. '))
     }
+  } else {
+    await oncePerHour.invalidate(to)
   }
 
   function count (sel) {

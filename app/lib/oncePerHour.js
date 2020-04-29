@@ -14,3 +14,7 @@ module.exports = async function oncePerHour (to, body) {
     log.info(`Skipping text to ${to}, already sent in the last 24 hours`)
   }
 }
+
+module.exports.invalidate = async function invalidate (to) {
+  await cache.set(`last-sent:${to}`, null)
+}
