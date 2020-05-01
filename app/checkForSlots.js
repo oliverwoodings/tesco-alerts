@@ -84,7 +84,7 @@ async function checkForSlots (page, tescoConfig) {
   log.info(summary.join('. '))
   if (hasSlots || config.alwaysSendTexts) {
     for (const to of tescoConfig.phoneNumbers) {
-      await oncePerHour(to, summary.join('. '))
+      await oncePerHour(to, `${tescoConfig.username} - ${summary.join('. ')}`)
     }
   } else {
     await oncePerHour.invalidate(to)
