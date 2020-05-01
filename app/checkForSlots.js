@@ -82,12 +82,12 @@ async function checkForSlots (page, tescoConfig) {
   }
 
   log.info(summary.join('. '))
-  if (hasSlots || config.alwaysSendTexts) {
-    for (const to of tescoConfig.phoneNumbers) {
+  for (const to of tescoConfig.phoneNumbers) {
+    if (hasSlots || config.alwaysSendTexts) {
       await oncePerHour(to, `${tescoConfig.username} - ${summary.join('. ')}`)
+    } else {
+      await oncePerHour.invalidate(to)
     }
-  } else {
-    await oncePerHour.invalidate(to)
   }
 
   function count (sel) {
