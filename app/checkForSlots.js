@@ -6,6 +6,10 @@ const oncePerHour = require('./lib/oncePerHour')
 module.exports = withPage(checkForSlots)
 
 async function checkForSlots (page, tescoConfig) {
+  await page.setUserAgent(
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.0 Safari/537.36'
+  )
+
   log.info('Opening up groceries page')
   await page.goto('https://www.tesco.com/groceries/en-GB/')
 
