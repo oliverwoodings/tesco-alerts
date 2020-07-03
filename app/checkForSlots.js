@@ -1,7 +1,8 @@
 const config = require('config')
 const withPage = require('./lib/withPage')
 const log = require('./lib/log')
-const oncePerHour = require('./lib/oncePerHour')
+const twilio = require('./lib/twilio')
+const cache = require('./lib/cache')
 
 module.exports = withPage(checkForSlots)
 
@@ -44,7 +45,7 @@ async function checkForSlots (page, tescoConfig) {
     }
   }
 
-  let summary = []
+  let summaryParts = []
   let hasSlots = false
 
   for (const type of ['delivery', 'collection']) {
@@ -75,22 +76,24 @@ async function checkForSlots (page, tescoConfig) {
 
     if (availableRanges.length) {
       hasSlots = true
-      summary.push(
+      summaryParts.push(
         `There are slots available for ${type} on ${availableRanges.join(
           ' and '
         )}`
       )
     } else {
-      summary.push(`There are no slots available on any dates for ${type}`)
+      summaryParts.push(`There are no slots available on any dates for ${type}`)
     }
   }
 
-  log.info(summary.join('. '))
+  const previousSummary = await cache.get(`summary:${tescoConfig.username}`)
+  const newSummary = summaryParts.join('. ')
+  await cache.set(`summary:${tescoConfig.username}`, newSummary)
+
+  log.info(newSummary)
   for (const to of tescoConfig.phoneNumbers) {
-    if (hasSlots || config.alwaysSendTexts) {
-      await oncePerHour(to, `${tescoConfig.username} - ${summary.join('. ')}`)
-    } else {
-      await oncePerHour.invalidate(to)
+    if (previousSummary !== newSummary || config.alwaysSendTexts) {
+      await twilio.send(to, `${tescoConfig.username} - ${newSummary}`)
     }
   }
 
