@@ -19,7 +19,7 @@ sentry:
   enabled: false
   dsn: foo
 
-schedule: '0 * * * *'
+schedule: '0 */4 * * *'
 
 runOnStart: false
 
